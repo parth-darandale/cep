@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Google Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            var location = { lat: 18.652252, lng: 73.741905 };
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: location
+            });
+            new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Interactive Google Map</h2>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+</body>
+</html>
