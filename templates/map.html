@@ -1,24 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Interactive Google Map</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Routes with ETA</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoe4L25do0dO-I40RsuieNCyP57-Wr88E&libraries=places&callback=initMap" async defer></script>
+    <style>
+        #map { height: 500px; width: 100%; }
+        #info { margin-top: 10px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h2>Custom Route with ETA</h2>
+    <div id="map"></div>
+    <p id="info"></p>
+
     <script>
         function initMap() {
-            var location = { lat: 18.652252, lng: 73.741905 };
-            var map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 10,
-                center: location
+            // Create map centered at a default location
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 7,
+                center: { lat: 19.0760, lng: 72.8777 } // Mumbai as default
             });
-            new google.maps.Marker({
-                position: location,
-                map: map
+
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+
+            // Define origin, destination, and waypoints
+            const request = {
+                origin: "Swargate, IN",
+                destination: "Akurdi, IN",
+                waypoints: [
+                    { location: "Pimpri, IN", stopover: true } // Optional stops
+                ],
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+
+            directionsService.route(request, (result, status) => {
+                if (status === google.maps.DirectionsStatus.OK) {
+                    directionsRenderer.setDirections(result);
+
+                    // Display ETA
+                    const leg = result.routes[0].legs[0];
+                    document.getElementById("info").innerHTML =
+                        `Distance: ${leg.distance.text} | Duration: ${leg.duration.text}`;
+                } else {
+                    alert("Directions request failed: " + status);
+                }
             });
         }
     </script>
-</head>
-<body>
-    <h2>Interactive Google Map</h2>
-    <div id="map" style="height: 500px; width: 100%;"></div>
 </body>
 </html>
